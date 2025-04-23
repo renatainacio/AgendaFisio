@@ -120,3 +120,14 @@ export async function getClasses() {
 
   return classesWithStudentCount;
 }
+
+export async function getEnrolledStudents(classId: number) {
+  return await db
+    .select({
+      id: students.id,
+      name: students.name,
+      phone: students.phone,
+    })
+    .from(students)
+    .where(eq(students.class_id, classId));
+}

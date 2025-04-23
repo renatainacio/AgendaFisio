@@ -15,7 +15,7 @@ async function seed() {
   const weekdayClasses = weekdays.flatMap((weekday) => [
     {
       max_students: 4,
-      professor: `Professor ${weekday} Morning`,
+      professor: `Maria Silva`,
       modality: "Zumba",
       weekday,
       start_time: "09:00:00",
@@ -24,7 +24,7 @@ async function seed() {
     },
     {
       max_students: 4,
-      professor: `Professor ${weekday} Night`,
+      professor: `Filomena Santos`,
       modality: "Pilates",
       weekday,
       start_time: "18:00:00",
@@ -35,7 +35,7 @@ async function seed() {
 
   const weekendClasses = weekends.map((weekday) => ({
     max_students: 6,
-    professor: `Professor ${weekday}`,
+    professor: `Hélio Gracie`,
     modality: "Jiu-Jitsu",
     weekday,
     start_time: "14:00:00",
