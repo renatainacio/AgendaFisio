@@ -100,3 +100,23 @@ export async function removeStudent(studentId: number) {
       .where(eq(classes.id, classId));
   }
 }
+
+export async function getClasses() {
+  const classesWithStudentCount = await db
+    .select({
+      id: classes.id,
+      max_students: classes.max_students,
+      professor: classes.professor,
+      modality: classes.modality,
+      weekday: classes.weekday,
+      start_time: classes.start_time,
+      duration: classes.duration,
+      is_full: classes.is_full,
+      enrolled_students: count(students.id).as("enrolled_students"),
+    })
+    .from(classes)
+    .leftJoin(students, eq(classes.id, students.class_id))
+    .groupBy(classes.id);
+
+  return classesWithStudentCount;
+}

@@ -1,103 +1,160 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { getClasses, addStudent } from "@/actions/classesAction";
+
+type Class = Awaited<ReturnType<typeof getClasses>>[number];
+
+const weekdays = [
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [selectedClass, setSelectedClass] = useState<Class | null>(null);
+  const [studentName, setStudentName] = useState("");
+  const [studentPhone, setStudentPhone] = useState("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+  const weekdayNames = {
+    sunday: "Domingo",
+    monday: "Segunda-feira",
+    tuesday: "Terça-feira",
+    wednesday: "Quarta-feira",
+    thursday: "Quinta-feira",
+    friday: "Sexta-feira",
+    saturday: "Sábado",
+  };
+
+  useEffect(() => {
+    async function fetchClasses() {
+      const fetchedClasses = await getClasses();
+      setClasses(fetchedClasses);
+    }
+    fetchClasses();
+  }, []);
+
+  const handleEnroll = async () => {
+    if (!selectedClass) return;
+
+    try {
+      await addStudent({
+        name: studentName,
+        phone: studentPhone,
+        class_id: selectedClass.id,
+      });
+      alert("Student enrolled successfully!");
+      setStudentName("");
+      setStudentPhone("");
+      setSelectedClass(null);
+
+      const updatedClasses = await getClasses();
+      setClasses(updatedClasses);
+    } catch {
+      alert("Failed to enroll student");
+    }
+  };
+
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">AgendaGym</h1>
+      <div className="grid grid-cols-7 gap-4">
+        {weekdays.map((day) => (
+          <div key={day} className="border p-2 rounded">
+            <h2 className="font-semibold capitalize mb-2">
+              {weekdayNames[day]}
+            </h2>
+            <div className="space-y-2">
+              {classes
+                .filter((cls) => cls.weekday === day)
+                .sort((a, b) => a.start_time.localeCompare(b.start_time))
+                .map((cls) => (
+                  <div
+                    key={cls.id}
+                    className="border p-2 rounded shadow cursor-pointer hover:bg-gray-100"
+                    onClick={() => setSelectedClass(cls)}
+                  >
+                    <p>
+                      <strong>{cls.modality}</strong>
+                      {" - "}
+                      {cls.start_time.slice(0, 5)}
+                    </p>
+                    <p className="text-sm text-right">
+                      {cls.enrolled_students}/{cls.max_students}
+                    </p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {selectedClass && (
+        <Dialog
+          open={!!selectedClass}
+          onOpenChange={() => setSelectedClass(null)}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{selectedClass.modality}</DialogTitle>
+            </DialogHeader>
+            <div>
+              <p>
+                <strong>Professor:</strong> {selectedClass.professor}
+              </p>
+              <p>
+                <strong>Horário:</strong> {selectedClass.start_time.slice(0, 5)}
+              </p>
+              <p>
+                <strong>Duração:</strong> {selectedClass.duration} minutos
+              </p>
+              <p>
+                <strong>Capacidade:</strong> {selectedClass.max_students}
+              </p>
+              <p>
+                <strong>Status:</strong>{" "}
+                {selectedClass.is_full ? "Cheia" : "Disponível"}
+              </p>
+            </div>
+            {!selectedClass.is_full && (
+              <div className="space-y-4 mt-4">
+                <input
+                  type="text"
+                  placeholder="Nome do Aluno"
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                  className="w-full border p-2 rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Telefone do Aluno"
+                  value={studentPhone}
+                  onChange={(e) => setStudentPhone(e.target.value)}
+                  className="w-full border p-2 rounded"
+                />
+                <Button
+                  onClick={handleEnroll}
+                  disabled={!studentName || !studentPhone}
+                >
+                  Cadastrar
+                </Button>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
