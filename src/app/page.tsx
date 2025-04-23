@@ -118,7 +118,7 @@ export default function Home() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">AgendaGym</h1>
-      <div className="grid grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
         {weekdays.map((day) => (
           <div key={day} className="border p-2 rounded">
             <h2 className="font-semibold capitalize mb-2">
