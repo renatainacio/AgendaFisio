@@ -3,36 +3,6 @@ import { db } from "@/db/drizzle";
 import { classes, students } from "../db/schema";
 import { eq, count } from "drizzle-orm";
 
-export async function createClass(data: {
-  max_students: number;
-  professor: string;
-  modality: string;
-  weekday:
-    | "sunday"
-    | "monday"
-    | "tuesday"
-    | "wednesday"
-    | "thursday"
-    | "friday"
-    | "saturday";
-  start_time: string;
-  duration: number;
-}) {
-  await db.insert(classes).values({
-    max_students: data.max_students,
-    professor: data.professor,
-    modality: data.modality,
-    weekday: data.weekday,
-    start_time: data.start_time,
-    duration: data.duration,
-    is_full: false,
-  });
-}
-
-export async function deleteClass(classId: number) {
-  await db.delete(classes).where(eq(classes.id, classId));
-}
-
 export async function addStudent(data: {
   name: string;
   phone: string;
