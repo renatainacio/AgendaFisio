@@ -42,8 +42,13 @@ export default function CadastroPage() {
       console.log(data)
 
       await router.push("/login");
-    } catch (err: any) {
-      setErro(err.message);
+    } catch (err: unknown) {
+      setLoading(false);
+      if (err instanceof Error) {
+        setErro(err.message);
+      } else {
+        setErro("Erro desconhecido");
+      }
     } finally {
       setLoading(false);
     }

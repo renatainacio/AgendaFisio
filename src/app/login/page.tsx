@@ -35,9 +35,13 @@ export default function LoginPage() {
 
       login(data.token, data.aluno);
       router.push("/");
-    } catch (err: any) {
-        setLoading(false);
-      setErro(err.message);
+    } catch (err: unknown) {
+      setLoading(false);
+      if (err instanceof Error) {
+        setErro(err.message);
+      } else {
+        setErro("Erro desconhecido");
+      }
     }
   };
 

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { getAulas, getAgendamentos, cancelarAgendamento, agendarAula } from "@/services/api";
-import { useRouter } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 import Header from "@/components/ui/Header";
 import CardAula, { Aula } from "@/components/ui/CardAula";
@@ -22,7 +21,6 @@ export type Agendamento = {
 
 export default function Home() {
   const { token, loading } = useAuth();
-  const router = useRouter();
   const [classes, setClasses] = useState<Aula[]>([]);
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
 
@@ -31,7 +29,7 @@ export default function Home() {
     try {
       const data = await getAulas(token!);
       setClasses(data.aulas);
-    } catch (e) {
+    } catch {
       toast.error("Erro ao buscar aulas");
     }
   }, [token]);
@@ -40,7 +38,7 @@ export default function Home() {
     try {
       const data = await getAgendamentos(token!);
       setAgendamentos(data.aulas);
-    } catch (e) {
+    } catch {
       toast.error("Erro ao buscar agendamentos");
     }
   }, [token]);
@@ -52,7 +50,7 @@ export default function Home() {
       try {
         await fetchAulas();
         await fetchAgendamentos();
-      } catch (err) {
+      } catch {
         toast.error("Erro ao carregar dados");
       }
     }
@@ -68,42 +66,50 @@ export default function Home() {
     );
   }
 
-const handleAgendarAula = async (idAula: string) => {
-  try {
-    await agendarAula(idAula, token!);
-    toast.success("Aula agendada com sucesso!");
-    await fetchAulas();
-    await fetchAgendamentos();
-  } catch (err: any) {
-    toast.error(err.message);
+  const handleAgendarAula = async (idAula: string) => {
+    try {
+      await agendarAula(idAula, token!);
+      toast.success("Aula agendada com sucesso!");
+      await fetchAulas();
+      await fetchAgendamentos();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Erro desconhecido ao agendar aula.");
+      }
+    }
+  };
+
+
+  const handleCancelarAgendamento = async (idAgendamento: string, idAula: string) => {
+    try {
+      await cancelarAgendamento(idAgendamento, token!);
+      toast.success("Agendamento cancelado!");
+
+      setAgendamentos((prev) =>
+        prev.filter((ag) => ag.id !== idAgendamento)
+      );
+      setClasses((prev) =>
+        prev.map((aula) =>
+          aula.id === idAula
+            ? {
+                ...aula,
+                vagas_ocupadas: (
+                  Number(aula.vagas_ocupadas) - 1
+                ).toString(),
+              }
+            : aula
+        )
+      );
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Erro desconhecido ao cancelar agendamento.");
+      }
+    }
   }
-};
-
-const handleCancelarAgendamento = async (idAgendamento: string, idAula: string) => {
-  try {
-    await cancelarAgendamento(idAgendamento, token!);
-    toast.success("Agendamento cancelado!");
-
-    setAgendamentos((prev) =>
-      prev.filter((ag) => ag.id !== idAgendamento)
-    );
-    setClasses((prev) =>
-      prev.map((aula) =>
-        aula.id === idAula
-          ? {
-              ...aula,
-              vagas_ocupadas: (
-                Number(aula.vagas_ocupadas) - 1
-              ).toString(),
-            }
-          : aula
-      )
-    );
-  } catch (e: any) {
-    toast.error(e.message);
-  }
-};
-
 
   return (
     <div className="p-4 pt-20">
