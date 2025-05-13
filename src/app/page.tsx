@@ -7,6 +7,7 @@ import Header from "@/components/ui/Header";
 import CardAula, { Aula } from "@/components/ui/CardAula";
 import toast from "react-hot-toast";
 import { useCallback } from "react";
+import Calendario from "@/components/ui/Calendar";
 
 
 export type Agendamento = {
@@ -114,26 +115,12 @@ export default function Home() {
   return (
     <div className="p-4 pt-20">
       <Header />
-        <h2 className="text-xl font-bold mb-4">Aulas disponíveis</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Array.isArray(classes) && classes.map((aula) => {
-          const agendamentoEncontrado = agendamentos.find(
-            (ag) => ag.id_aula === aula.id
-          );
-
-          return (
-            <CardAula
-              key={aula.id}
-              aula={aula}
-              agendado={Boolean(agendamentoEncontrado)}
-              idAgendamento={agendamentoEncontrado?.id}
-              onAgendarAula={handleAgendarAula}
-              onCancelarAgendamento={handleCancelarAgendamento}
-            />
-          );
-        })}
-        </div>
-
+      <Calendario
+          aulas={classes}
+          agendamentos={agendamentos}
+          onAgendar={handleAgendarAula}
+          onCancelar={handleCancelarAgendamento}
+        />
     </div>
   );
 }
