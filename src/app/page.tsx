@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { getAulas, getAgendamentos, cancelarAgendamento, agendarAula } from "@/services/api";
 import { useAuth } from "../contexts/AuthContext";
 import Header from "@/components/ui/Header";
-import CardAula, { Aula } from "@/components/ui/CardAula";
 import toast from "react-hot-toast";
 import { useCallback } from "react";
 import Calendario from "@/components/ui/Calendar";
