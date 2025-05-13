@@ -1,7 +1,7 @@
 "use client";
 
+import { Aula } from "@/app/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Aula } from "./CardAula";
 
 export default function ModalAula({
   aula,

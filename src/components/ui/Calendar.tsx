@@ -6,7 +6,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import ModalAula from "./ModalAula";
-import { Agendamento } from "@/app/types";
+import { Agendamento, Aula } from "@/app/types";
 
 type Props = {
   aulas: Aula[];
