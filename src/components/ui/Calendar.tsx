@@ -7,7 +7,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Aula } from "./CardAula";
 import ModalAula from "./ModalAula";
-import { Agendamento } from "@/app/page";
+import { Agendamento } from "@/app/types";
 
 type Props = {
   aulas: Aula[];

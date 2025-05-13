@@ -7,17 +7,7 @@ import Header from "@/components/ui/Header";
 import toast from "react-hot-toast";
 import { useCallback } from "react";
 import Calendario from "@/components/ui/Calendar";
-
-
-export type Agendamento = {
-  id: string;
-  id_aula: string;
-  data: string;
-  horario: string;
-  duração: string;
-  modalidade: string;
-  professor: string;
-};
+import { Aula, Agendamento } from "./types";
 
 export default function Home() {
   const { token, loading } = useAuth();
