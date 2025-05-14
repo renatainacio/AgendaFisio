@@ -8,19 +8,22 @@ import toast from "react-hot-toast";
 import { useCallback } from "react";
 import Calendario from "@/components/ui/Calendar";
 import { Aula, Agendamento } from "./types";
+import { useRouter } from "next/navigation";
+import { handleErrors } from "./handleErrors";
 
 export default function Home() {
   const { token, loading } = useAuth();
   const [classes, setClasses] = useState<Aula[]>([]);
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
+  const router = useRouter();
 
 
   const fetchAulas = useCallback(async () => {
     try {
       const data = await getAulas(token!);
       setClasses(data.aulas);
-    } catch {
-      toast.error("Erro ao buscar aulas");
+    } catch (err){
+      handleErrors(err, router, "Erro ao buscar aulas")
     }
   }, [token]);
 
@@ -28,10 +31,17 @@ export default function Home() {
     try {
       const data = await getAgendamentos(token!);
       setAgendamentos(data.aulas);
-    } catch {
-      toast.error("Erro ao buscar agendamentos");
+    } catch (err){
+      handleErrors(err, router, "Erro ao buscar agendamentos")
     }
   }, [token]);
+
+  useEffect(() => {
+    "verificando auth"
+    if (!token && !loading) {
+      router.replace("/login");
+    }
+  }, [token, loading, router]);
 
   useEffect(() => {
     if (!token || loading) return;
@@ -40,8 +50,8 @@ export default function Home() {
       try {
         await fetchAulas();
         await fetchAgendamentos();
-      } catch {
-        toast.error("Erro ao carregar dados");
+      } catch (err){
+        handleErrors(err, router, "Erro ao carregar dados")
       }
     }
 
@@ -66,7 +76,7 @@ export default function Home() {
       if (err instanceof Error) {
         toast.error(err.message);
       } else {
-        toast.error("Erro desconhecido ao agendar aula.");
+        handleErrors(err, router, "Erro desconhecido ao agendar aula.");
       }
     }
   };
@@ -96,7 +106,7 @@ export default function Home() {
       if (err instanceof Error) {
         toast.error(err.message);
       } else {
-        toast.error("Erro desconhecido ao cancelar agendamento.");
+        handleErrors(err, router, "Erro desconhecido ao cancelar agendamento.");
       }
     }
   }
