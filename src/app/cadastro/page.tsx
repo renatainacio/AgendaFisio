@@ -8,7 +8,7 @@ export default function CadastroPage() {
 
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
-  const [aulasSemana, setAulasSemana] = useState(1);
+  const [atendimentosSemana, setAtendimentosSemana] = useState(1);
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [erro, setErro] = useState("");
@@ -31,7 +31,7 @@ export default function CadastroPage() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ nome, cpf, senha, aulas_semana: aulasSemana })
+        body: JSON.stringify({ nome, cpf, senha, atendimentos_semana: atendimentosSemana })
       });
 
       const data = await res.json();
@@ -86,16 +86,16 @@ export default function CadastroPage() {
         </div>
 
         <div>
-            <label htmlFor="aulasSemana" className="block text-sm font-medium text-gray-700 mb-1">
-                Aulas por semana
+            <label htmlFor="atendimentosSemana" className="block text-sm font-medium text-gray-700 mb-1">
+                Atendimentos por semana
             </label>
             <input
-                id="aulasSemana"
+                id="atendimentosSemana"
                 type="number"
                 min="1"
                 max="7"
-                value={aulasSemana}
-                onChange={(e) => setAulasSemana(Number(e.target.value))}
+                value={atendimentosSemana}
+                onChange={(e) => setAtendimentosSemana(Number(e.target.value))}
                 className="w-full border p-2 rounded"
             />
         </div>

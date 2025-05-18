@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "AgendaGym",
-  description: "Sistema de agendamento de aulas",
+  description: "Sistema de agendamento de fisioterapia",
   icons: {
     icon: "/favicon.png",
   },

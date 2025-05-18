@@ -1,6 +1,6 @@
 # AgendaGym
 
-Este é um projeto desenvolvido com [Next.js](https://nextjs.org), que utiliza uma stack moderna para criar uma aplicação de agendamento de aulas em academias.
+Este é um projeto desenvolvido com [Next.js](https://nextjs.org), que utiliza uma stack moderna para criar uma aplicação de agendamento de atendimentos de fisioterapia.
 
 ## Tecnologias Utilizadas
 
@@ -94,7 +94,7 @@ Abra [http://localhost:3000](http://localhost:3000) no navegador para visualizar
 - **`src/app`**: Contém as páginas e o layout principal da aplicação.
 - **`src/components`**: Componentes reutilizáveis, como botões e diálogos.
 - **`src/db`**: Configuração do banco de dados, schemas e scripts de seed.
-- **`src/actions`**: Funções que interagem com o banco de dados, como criação de aulas e gerenciamento de alunos.
+- **`src/actions`**: Funções que interagem com o banco de dados, como criação de atendimentos e gerenciamento de alunos.
 - **`src/lib`**: Utilitários auxiliares, como funções para manipulação de classes CSS.
 
 ---

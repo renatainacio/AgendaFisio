@@ -1,40 +1,40 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getAulas, getAgendamentos, cancelarAgendamento, agendarAula } from "@/services/api";
+import { getAtendimentos, getAgendamentos, cancelarAgendamento, agendarAtendimento } from "@/services/api";
 import { useAuth } from "../contexts/AuthContext";
 import Header from "@/components/ui/Header";
 import toast from "react-hot-toast";
 import { useCallback } from "react";
 import Calendario from "@/components/ui/Calendar";
-import { Aula, Agendamento } from "./types";
+import { Atendimento, Agendamento } from "./types";
 import { useRouter } from "next/navigation";
 import { handleErrors } from "./handleErrors";
 
 export default function Home() {
   const { token, loading } = useAuth();
-  const [classes, setClasses] = useState<Aula[]>([]);
+  const [atendimentos, setAtendimentos] = useState<Atendimento[]>([]);
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const router = useRouter();
 
 
-  const fetchAulas = useCallback(async () => {
+  const fetchAtendimentos = useCallback(async () => {
     try {
-      const data = await getAulas(token!);
-      setClasses(data.aulas);
+      const data = await getAtendimentos(token!);
+      setAtendimentos(data.atendimentos);
     } catch (err){
-      handleErrors(err, router, "Erro ao buscar aulas")
+      handleErrors(err, router, "Erro ao buscar atendimentos")
     }
-  }, [token]);
+  }, [token, router]);
 
   const fetchAgendamentos = useCallback(async () => {
     try {
       const data = await getAgendamentos(token!);
-      setAgendamentos(data.aulas);
+      setAgendamentos(data.agendamentos);
     } catch (err){
       handleErrors(err, router, "Erro ao buscar agendamentos")
     }
-  }, [token]);
+  }, [token, router]);
 
   useEffect(() => {
     "verificando auth"
@@ -48,7 +48,7 @@ export default function Home() {
 
     async function fetchInfo() {
       try {
-        await fetchAulas();
+        await fetchAtendimentos();
         await fetchAgendamentos();
       } catch (err){
         handleErrors(err, router, "Erro ao carregar dados")
@@ -56,7 +56,7 @@ export default function Home() {
     }
 
     fetchInfo();
-  }, [token, loading, fetchAulas, fetchAgendamentos]);
+  }, [token, loading, fetchAtendimentos, fetchAgendamentos, router]);
 
   if (loading) {
     return (
@@ -66,23 +66,23 @@ export default function Home() {
     );
   }
 
-  const handleAgendarAula = async (idAula: string) => {
+  const handleAgendarAtendimento = async (idAtendimento: string) => {
     try {
-      await agendarAula(idAula, token!);
-      toast.success("Aula agendada com sucesso!");
-      await fetchAulas();
+      await agendarAtendimento(idAtendimento, token!);
+      toast.success("Atendimento agendado com sucesso!");
+      await fetchAtendimentos();
       await fetchAgendamentos();
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message);
       } else {
-        handleErrors(err, router, "Erro desconhecido ao agendar aula.");
+        handleErrors(err, router, "Erro desconhecido ao agendar atendimento.");
       }
     }
   };
 
 
-  const handleCancelarAgendamento = async (idAgendamento: string, idAula: string) => {
+  const handleCancelarAgendamento = async (idAgendamento: string, idAtendimento: string) => {
     try {
       await cancelarAgendamento(idAgendamento, token!);
       toast.success("Agendamento cancelado!");
@@ -90,16 +90,16 @@ export default function Home() {
       setAgendamentos((prev) =>
         prev.filter((ag) => ag.id !== idAgendamento)
       );
-      setClasses((prev) =>
-        prev.map((aula) =>
-          aula.id === idAula
+      setAtendimentos((prev) =>
+        prev.map((atendimento) =>
+          atendimento.id === idAtendimento
             ? {
-                ...aula,
+                ...atendimento,
                 vagas_ocupadas: (
-                  Number(aula.vagas_ocupadas) - 1
+                  Number(atendimento.vagas_ocupadas) - 1
                 ).toString(),
               }
-            : aula
+            : atendimento
         )
       );
     } catch (err: unknown) {
@@ -115,9 +115,9 @@ export default function Home() {
     <div className="p-4 pt-20">
       <Header />
       <Calendario
-          aulas={classes}
+          atendimentos={atendimentos}
           agendamentos={agendamentos}
-          onAgendar={handleAgendarAula}
+          onAgendar={handleAgendarAtendimento}
           onCancelar={handleCancelarAgendamento}
         />
     </div>

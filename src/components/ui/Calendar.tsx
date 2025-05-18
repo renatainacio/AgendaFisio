@@ -5,14 +5,14 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import ModalAula from "./ModalAula";
-import { Agendamento, Aula } from "@/app/types";
+import ModalAtendimento from "./ModalAtendimento";
+import { Agendamento, Atendimento } from "@/app/types";
 
 type Props = {
-  aulas: Aula[];
+  atendimentos: Atendimento[];
   agendamentos: Agendamento[];
-  onAgendar: (idAula: string) => void;
-  onCancelar: (idAgendamento: string, idAula: string) => void;
+  onAgendar: (idAtendimento: string) => void;
+  onCancelar: (idAgendamento: string, idAtendimento: string) => void;
 };
 
 function formatarData(dataBR: string) {
@@ -21,27 +21,27 @@ function formatarData(dataBR: string) {
 }
 
 export default function Calendario({
-  aulas,
+  atendimentos,
   agendamentos,
   onAgendar,
   onCancelar,
 }: Props) {
-  const [aulaSelecionada, setAulaSelecionada] = useState<Aula | null>(null);
+  const [atendimentoSelecionado, setAtendimentoSelecionado] = useState<Atendimento | null>(null);
   const [open, setOpen] = useState(false);
 
-  const eventos = aulas.map((aula: Aula) => {
-    const vagasRestantes = Number(aula.maximo_alunos) - Number(aula.vagas_ocupadas);
-    const agendado = agendamentos.some((ag) => ag.id_aula === aula.id);
+  const eventos = atendimentos.map((atendimento: Atendimento) => {
+    const vagasRestantes = Number(atendimento.maximo_alunos) - Number(atendimento.vagas_ocupadas);
+    const agendado = agendamentos.some((ag) => ag.id_atendimento === atendimento.id);
 
     let classe = "evento-normal";
     if (vagasRestantes <= 0) classe = "evento-lotado";
     else if (agendado) classe = "evento-agendado";
 
     return {
-      id: aula.id,
+      id: atendimento.id,
       title: "",
-      start: formatarData(aula.data),
-      extendedProps: aula,
+      start: formatarData(atendimento.data),
+      extendedProps: atendimento,
       className: classe,
     };
   });
@@ -49,7 +49,7 @@ export default function Calendario({
 
   return (
     <div className="p-4 pt-20">
-      <h2 className="text-2xl font-bold mb-4">Calendário de Aulas</h2>
+      <h2 className="text-2xl font-bold mb-4">Calendário de Atendimentos</h2>
 
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -57,14 +57,14 @@ export default function Calendario({
         locale="pt-br"
         events={eventos}
         eventClick={(info) => {
-          setAulaSelecionada(info.event.extendedProps as Aula);
+          setAtendimentoSelecionado(info.event.extendedProps as Atendimento);
           setOpen(true);
         }}
         eventContent={(arg) => {
-          const aula = arg.event.extendedProps as Aula;
+          const atendimento = arg.event.extendedProps as Atendimento;
           const vagasRestantes =
-            Number(aula.maximo_alunos) - Number(aula.vagas_ocupadas);
-          const agendado = agendamentos.some((ag) => ag.id_aula === aula.id);
+            Number(atendimento.maximo_alunos) - Number(atendimento.vagas_ocupadas);
+          const agendado = agendamentos.some((ag) => ag.id_atendimento === atendimento.id);
 
           const labelColor = vagasRestantes <= 0
             ? "bg-gray-400"
@@ -87,9 +87,9 @@ export default function Calendario({
                 texto.className = "flex flex-col text-left";
                 texto.innerHTML = `
                   <div class="flex justify-between items-center">
-                    <strong class="text-blue-900">${aula.modalidade}</strong>
+                    <strong class="text-blue-900">${atendimento.modalidade}</strong>
                   </div>
-                  <span class="text-xs text-gray-700">${aula.horário} - Prof. ${aula.professor}</span>
+                  <span class="text-xs text-gray-700">${atendimento.horário} - ${atendimento.fisio}</span>
                   <span class="text-xs ${
                     vagasRestantes > 0 ? "text-gray-500" : "text-red-500"
                   }">${vagasRestantes > 0 ? `${vagasRestantes} vaga(s)` : "Sem vagas"}</span>
@@ -104,9 +104,9 @@ export default function Calendario({
         }}
 
         eventClassNames={(arg) => {
-          const aula = arg.event.extendedProps as Aula;
-          const vagasRestantes = Number(aula.maximo_alunos) - Number(aula.vagas_ocupadas);
-          const agendado = agendamentos.some((ag) => ag.id_aula === aula.id);
+          const atendimento = arg.event.extendedProps as Atendimento;
+          const vagasRestantes = Number(atendimento.maximo_alunos) - Number(atendimento.vagas_ocupadas);
+          const agendado = agendamentos.some((ag) => ag.id_atendimento === atendimento.id);
 
           if (vagasRestantes <= 0) return ["evento-lotado"];
           if (agendado) return ["evento-agendado"];
@@ -116,13 +116,13 @@ export default function Calendario({
       />
 
 
-    <ModalAula
-      aula={aulaSelecionada}
+    <ModalAtendimento
+      atendimento={atendimentoSelecionado}
       isOpen={open}
       onClose={() => setOpen(false)}
-      agendado={agendamentos.some((ag) => ag.id_aula === aulaSelecionada?.id)}
+      agendado={agendamentos.some((ag) => ag.id_atendimento === atendimentoSelecionado?.id)}
       idAgendamento={
-        agendamentos.find((ag) => ag.id_aula === aulaSelecionada?.id)?.id
+        agendamentos.find((ag) => ag.id_atendimento === atendimentoSelecionado?.id)?.id
       }
       onAgendar={onAgendar}
       onCancelar={onCancelar}

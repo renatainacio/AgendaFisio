@@ -1,31 +1,31 @@
-export async function getAulas(token: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/aulas`, {
+export async function getAtendimentos(token: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/atendimentos`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   });
 
   if (!res.ok) {
-    throw new Error("Erro ao buscar aulas");
+    throw new Error("Erro ao buscar atendimentos");
   }
 
   return await res.json();
 }
 
-export async function agendarAula(idAula: string, token: string) {
+export async function agendarAtendimento(idAtendimento: string, token: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/agendamentos`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ id_aula: idAula })
+    body: JSON.stringify({ id_atendimento: idAtendimento })
   });
 
   const data = await res.json();
 
   if (!res.ok || !data.sucesso) {
-    throw new Error(data.mensagem || "Erro ao agendar aula");
+    throw new Error(data.mensagem || "Erro ao agendar atendimento");
   }
 
   return data;
