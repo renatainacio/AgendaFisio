@@ -9,7 +9,7 @@ export default function LoginPage() {
   const { login } = useAuth();
   const router = useRouter();
 
-  const [telefone, setTelefone] = useState("");
+  const [cpf, setCpf] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export default function LoginPage() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ telefone, senha })
+        body: JSON.stringify({ cpf, senha })
       });
       setLoading(false);
       const data = await res.json();
@@ -50,14 +50,14 @@ export default function LoginPage() {
       <h1 className="text-xl font-bold mb-4">Login</h1>
       {erro && <p className="text-red-500">{erro}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <label htmlFor="telefone" className="block text-sm font-medium text-gray-700 mb-1">
-            Telefone
+        <label htmlFor="cpf" className="block text-sm font-medium text-gray-700 mb-1">
+            CPF
         </label>
         <input
           type="text"
-          placeholder="Telefone"
-          value={telefone}
-          onChange={(e) => setTelefone(e.target.value)}
+          placeholder="CPF"
+          value={cpf}
+          onChange={(e) => setCpf(e.target.value)}
           className="w-full border p-2 rounded"
         />
         <label htmlFor="senha" className="block text-sm font-medium text-gray-700 mb-1">

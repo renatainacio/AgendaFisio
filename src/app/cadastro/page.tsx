@@ -7,7 +7,7 @@ export default function CadastroPage() {
   const router = useRouter();
 
   const [nome, setNome] = useState("");
-  const [telefone, setTelefone] = useState("");
+  const [cpf, setCpf] = useState("");
   const [aulasSemana, setAulasSemana] = useState(1);
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
@@ -31,7 +31,7 @@ export default function CadastroPage() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ nome, telefone, senha, aulas_semana: aulasSemana })
+        body: JSON.stringify({ nome, cpf, senha, aulas_semana: aulasSemana })
       });
 
       const data = await res.json();
@@ -73,14 +73,14 @@ export default function CadastroPage() {
         </div>
 
         <div>
-          <label htmlFor="telefone" className="block text-sm font-medium text-gray-700 mb-1">
-            Telefone
+          <label htmlFor="cpf" className="block text-sm font-medium text-gray-700 mb-1">
+            CPF
           </label>
           <input
-            id="telefone"
+            id="cpf"
             type="text"
-            value={telefone}
-            onChange={(e) => setTelefone(e.target.value)}
+            value={cpf}
+            onChange={(e) => setCpf(e.target.value)}
             className="w-full border p-2 rounded"
           />
         </div>

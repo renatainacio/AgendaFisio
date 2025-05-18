@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
   nome: string;
-  telefone: string;
+  cpf: string;
 }
 
 interface AuthContextType {
