@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import InputMask from "react-input-mask";
 
 export default function CadastroPage() {
   const router = useRouter();
@@ -39,7 +40,6 @@ export default function CadastroPage() {
       if (!res.ok || !data.sucesso) {
         throw new Error(data.mensagem || "Erro ao cadastrar");
       }
-      console.log(data)
 
       await router.push("/login");
     } catch (err: unknown) {
@@ -76,13 +76,27 @@ export default function CadastroPage() {
           <label htmlFor="cpf" className="block text-sm font-medium text-gray-700 mb-1">
             CPF
           </label>
-          <input
+          <InputMask
+            mask="999.999.999-99"
+            value={cpf}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCpf(e.target.value)}
+          >
+            {(inputProps: React.InputHTMLAttributes<HTMLInputElement>) => (
+              <input
+                {...inputProps}
+                type="text"
+                className="w-full border p-2 rounded"
+                placeholder="CPF"
+              />
+            )}
+          </InputMask>
+          {/* <input
             id="cpf"
             type="text"
             value={cpf}
             onChange={(e) => setCpf(e.target.value)}
             className="w-full border p-2 rounded"
-          />
+          /> */}
         </div>
 
         <div>

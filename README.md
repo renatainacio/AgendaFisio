@@ -1,4 +1,4 @@
-# AgendaGym
+# AgendaFisio
 
 Este é um projeto desenvolvido com [Next.js](https://nextjs.org), que utiliza uma stack moderna para criar uma aplicação de agendamento de atendimentos de fisioterapia.
 
