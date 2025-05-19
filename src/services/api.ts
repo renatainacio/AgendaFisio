@@ -8,8 +8,8 @@ export async function getAtendimentos(token: string) {
   if (!res.ok) {
     throw new Error("Erro ao buscar atendimentos");
   }
-
-  return await res.json();
+  const data = await res.json();
+  return data;
 }
 
 export async function agendarAtendimento(idAtendimento: string, token: string) {
@@ -27,7 +27,6 @@ export async function agendarAtendimento(idAtendimento: string, token: string) {
   if (!res.ok || !data.sucesso) {
     throw new Error(data.mensagem || "Erro ao agendar atendimento");
   }
-
   return data;
 }
 
@@ -43,7 +42,6 @@ export async function getAgendamentos(token: string) {
   if (!res.ok || !data.sucesso) {
     throw new Error(data.mensagem || "Erro ao buscar agendamentos");
   }
-
   return data;
 }
 
@@ -59,6 +57,5 @@ export async function cancelarAgendamento(idAgendamento: string, token: string) 
   if (!res.ok || !data.sucesso) {
     throw new Error(data.mensagem || "Erro ao cancelar agendamento");
   }
-
   return data;
 }

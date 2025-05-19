@@ -9,7 +9,7 @@ export type Atendimento = {
   modalidade: string;
   fisio: string;
   vagas_ocupadas: string;
-  maximo_alunos: string;
+  maximo_clientes: string;
 };
 
 export type Agendamento = {

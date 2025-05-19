@@ -22,7 +22,7 @@ export default function ModalAtendimento({
 }) {
   if (!atendimento) return null;
 
-  const vagasRestantes = Number(atendimento.maximo_alunos) - Number(atendimento.vagas_ocupadas);
+  const vagasRestantes = Number(atendimento.maximo_clientes) - Number(atendimento.vagas_ocupadas);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -37,7 +37,7 @@ export default function ModalAtendimento({
           <p><strong>Horário:</strong> {atendimento.horário}</p>
           <p><strong>Duração:</strong> {atendimento.duracao}</p>
           <p><strong>Fisio:</strong> {atendimento.fisio}</p>
-          <p><strong>Vagas:</strong> {atendimento.vagas_ocupadas}/{atendimento.maximo_alunos} ({vagasRestantes} restantes)</p>
+          <p><strong>Vagas:</strong> {atendimento.vagas_ocupadas}/{atendimento.maximo_clientes} ({vagasRestantes} restantes)</p>
         </div>
 
         <DialogFooter>

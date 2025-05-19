@@ -30,7 +30,7 @@ export default function Calendario({
   const [open, setOpen] = useState(false);
 
   const eventos = atendimentos.map((atendimento: Atendimento) => {
-    const vagasRestantes = Number(atendimento.maximo_alunos) - Number(atendimento.vagas_ocupadas);
+    const vagasRestantes = Number(atendimento.maximo_clientes) - Number(atendimento.vagas_ocupadas);
     const agendado = agendamentos.some((ag) => ag.id_atendimento === atendimento.id);
 
     let classe = "evento-normal";
@@ -63,7 +63,7 @@ export default function Calendario({
         eventContent={(arg) => {
           const atendimento = arg.event.extendedProps as Atendimento;
           const vagasRestantes =
-            Number(atendimento.maximo_alunos) - Number(atendimento.vagas_ocupadas);
+            Number(atendimento.maximo_clientes) - Number(atendimento.vagas_ocupadas);
           const agendado = agendamentos.some((ag) => ag.id_atendimento === atendimento.id);
 
           const labelColor = vagasRestantes <= 0
@@ -105,7 +105,7 @@ export default function Calendario({
 
         eventClassNames={(arg) => {
           const atendimento = arg.event.extendedProps as Atendimento;
-          const vagasRestantes = Number(atendimento.maximo_alunos) - Number(atendimento.vagas_ocupadas);
+          const vagasRestantes = Number(atendimento.maximo_clientes) - Number(atendimento.vagas_ocupadas);
           const agendado = agendamentos.some((ag) => ag.id_atendimento === atendimento.id);
 
           if (vagasRestantes <= 0) return ["evento-lotado"];

@@ -33,7 +33,7 @@ export default function LoginPage() {
         throw new Error(data.mensagem || "Erro ao fazer login");
       }
 
-      login(data.token, data.aluno);
+      login(data.token, data.cliente);
       router.push("/");
     } catch (err: unknown) {
       setLoading(false);
