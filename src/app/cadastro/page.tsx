@@ -75,27 +75,13 @@ export default function CadastroPage() {
           <label htmlFor="cpf" className="block text-sm font-medium text-gray-700 mb-1">
             CPF
           </label>
-          <InputMask
-            mask="999.999.999-99"
-            value={cpf}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCpf(e.target.value)}
-          >
-            {(inputProps: React.InputHTMLAttributes<HTMLInputElement>) => (
-              <input
-                {...inputProps}
-                type="text"
-                className="w-full border p-2 rounded"
-                placeholder="CPF"
-              />
-            )}
-          </InputMask>
-          {/* <input
+          <input
             id="cpf"
             type="text"
             value={cpf}
             onChange={(e) => setCpf(e.target.value)}
             className="w-full border p-2 rounded"
-          /> */}
+          />
         </div>
 
         <div>
